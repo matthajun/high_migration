@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = class MOTIE_ASSET_IP extends Sequelize.Model {
+module.exports = class MOTIE_DATA_REQUEST extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
             id: {
@@ -8,15 +8,16 @@ module.exports = class MOTIE_ASSET_IP extends Sequelize.Model {
                 primaryKey: true,
                 autoIncrement: true,
             },
-            assetId: {
+            type: {
                 type: Sequelize.INTEGER,
                 allowNull: true,
             },
-            assetIp: {
-                type: Sequelize.STRING(45),
-                allowNull: true,
+            gubun: {
+                type: Sequelize.STRING(50),
+                allowNull: false,
+                defaultValue: '\'\'',
             },
-            keeperKey: {
+            powerGenId: {
                 type: Sequelize.STRING(50),
                 allowNull: true,
             },
@@ -27,51 +28,52 @@ module.exports = class MOTIE_ASSET_IP extends Sequelize.Model {
             makeId: {
                 type: Sequelize.STRING(50),
                 allowNull: true,
-            },
-            powerGenId: {
-                type: Sequelize.STRING(50),
-                allowNull: true,
-            },
-            plantId: {
-                type: Sequelize.STRING(50),
-                allowNull: true,
+                defaultValue: '\'\'',
             },
             deviceId: {
                 type: Sequelize.STRING(50),
                 allowNull: true,
+                defaultValue: '\'\'',
+            },
+            startTime: {
+                type: Sequelize.STRING(50),
+                allowNull: false,
+                defaultValue: '\'\'',
+            },
+            endTime: {
+                type: Sequelize.STRING(50),
+                allowNull: false,
+                defaultValue: '\'\'',
+            },
+            state: {
+                type: Sequelize.STRING(50),
+                allowNull: false,
+                defaultValue: '200',
+            },
+            stateValue: {
+                type: Sequelize.STRING(50),
+                allowNull: false,
+                defaultValue: '200',
             },
             fstUser: {
-                type: Sequelize.STRING(45),
-                allowNull: true,
+                type: Sequelize.STRING(50),
+                allowNull: false,
+                defaultValue: '\'\'',
             },
             fstDttm: {
                 type: Sequelize.DATE,
                 allowNull: true,
             },
-            lstUser: {
-                type: Sequelize.STRING(45),
-                allowNull: true,
-            },
-            lstDttm: {
-                type: Sequelize.DATE,
-                allowNull: true,
-            },
-            trans_tag: {
-                type: Sequelize.STRING(5),
-                allowNull: false,
-                defaultValue: 'C',
-            },
-            state: {
+            stationId: {
                 type: Sequelize.STRING(50),
-                allowNull: false,
-                defaultValue: 'C',
+                allowNull: true,
             },
         }, {
             sequelize,
             timestamps: false,
             underscored: false,
-            modelName: 'MOTIE_ASSET_IP',
-            tableName: 'motie_asset_ip',
+            modelName: 'MOTIE_DATA_REQUEST',
+            tableName: 'motie_data_request',
             paranoid: true,
             charset: 'utf8',
             collate: 'utf8_general_ci',

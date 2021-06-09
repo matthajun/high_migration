@@ -6,25 +6,30 @@ const schedule = require('node-schedule');
 const _ = require('loadsh');
 
 module.exports.searchAndtransm = async function() {
-    schedule.scheduleJob(process.env.POLICY_TIME, async function() {
+    schedule.scheduleJob(process.env.RULE1_TIME, async function() {
         let rtnResult = {};
         try {
             const result = await db.sequelize.transaction(async (t) => {
                 let tableInfo = {};
 
-                let tableName = process.env.BW_LIST_TABLE;
+                let tableName = process.env.RULE_MULTI_TABLE;
 
-                let rslt = await db[tableName.toUpperCase()].findAll({where: {state: 'D'}}).then(users => {
+                let rslt = await db[tableName.toUpperCase()].findAll({where: {state: ['U', 'D']}}).then(users => {
                     if (users) {
                         for (user of users) {
                             let data = {};
                             data = user.dataValues;
                             if(data) {
-                                winston.info("******************* Policy update!! *************************");
+                                winston.info("******************* Multi-Rule update!! *************************");
                                 tableInfo = {tableName: tableName, tableData: _.cloneDeep(data)};
                                 makereq.highrankPush(tableInfo);
                             }
-                            user.update({state: 'DE', trans_tag: 'E'});
+                            if (data.state === 'D') {
+                                user.update({state: 'DE'});
+                            }
+                            else {
+                                user.update({state: 'E'});
+                            }
                         }
                     }
                 });

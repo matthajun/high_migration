@@ -1,10 +1,10 @@
 const Sequelize = require('sequelize');
 
-module.exports = class COMMUNI_WHITE_LIST extends Sequelize.Model {
+module.exports = class MOTIE_LOG_SYSTEM extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
             id: {
-                type: Sequelize.INTEGER.UNSIGNED,
+                type: Sequelize.INTEGER,
                 primaryKey: true,
                 autoIncrement: true,
             },
@@ -13,46 +13,54 @@ module.exports = class COMMUNI_WHITE_LIST extends Sequelize.Model {
                 allowNull: true,
             },
             powerGenId: {
+                type: Sequelize.STRING(10),
+                allowNull: true,
+            },
+            assetNm: {
+                type: Sequelize.STRING(100),
+                allowNull: true,
+            },
+            cpuNotice: {
+                type: Sequelize.INTEGER(100),
+                allowNull: true,
+            },
+            cpuWarning: {
+                type: Sequelize.INTEGER(100),
+                allowNull: true,
+            },
+            memoryNotice: {
+                type: Sequelize.INTEGER(100),
+                allowNull: true,
+            },
+            memoryWarning: {
+                type: Sequelize.INTEGER(100),
+                allowNull: true,
+            },
+            diskwarning: {
+                type: Sequelize.INTEGER(100),
+                allowNull: true,
+            },
+            diskNotice: {
+                type: Sequelize.INTEGER(100),
+                allowNull: true,
+            },
+            levelLow: {
+                type: Sequelize.INTEGER(100),
+                allowNull: true,
+            },
+            levelHight: {
+                type: Sequelize.INTEGER(100),
+                allowNull: true,
+            },
+            content: {
+                type: Sequelize.STRING(250),
+                allowNull: true,
+            },
+            fstUser: {
                 type: Sequelize.STRING(50),
                 allowNull: true,
             },
-            unit: {
-                type: Sequelize.STRING(50),
-                allowNull: true,
-            },
-            make: {
-                type: Sequelize.STRING(50),
-                allowNull: true,
-            },
-            name: {
-                type: Sequelize.STRING(50),
-                allowNull: true,
-            },
-            protocolType: {
-                type: Sequelize.STRING(50),
-                allowNull: true,
-            },
-            detailProtocol: {
-                type: Sequelize.STRING(50),
-                allowNull: true,
-            },
-            srcIp: {
-                type: Sequelize.STRING(50),
-                allowNull: true,
-            },
-            dstIp: {
-                type: Sequelize.STRING(50),
-                allowNull: true,
-            },
-            srcPort: {
-                type: Sequelize.STRING(50),
-                allowNull: true,
-            },
-            dstPort: {
-                type: Sequelize.STRING(50),
-                allowNull: true,
-            },
-            state: {
+            lstUser: {
                 type: Sequelize.STRING(50),
                 allowNull: true,
             },
@@ -64,25 +72,27 @@ module.exports = class COMMUNI_WHITE_LIST extends Sequelize.Model {
                 type: Sequelize.DATE,
                 allowNull: true,
             },
-            fstUser: {
-                type: Sequelize.STRING(60),
-                allowNull: true,
-            },
-            lstUser: {
-                type: Sequelize.STRING(60),
-                allowNull: true,
-            },
-            trans_tag: {
+            state_level: {
                 type: Sequelize.STRING(5),
                 allowNull: false,
                 defaultValue: 'C',
             },
+            state_limit: {
+                type: Sequelize.STRING(5),
+                allowNull: false,
+                defaultValue: 'C',
+            },
+            trans_tag:{
+                type: Sequelize.STRING(5),
+                allowNull: false,
+                defaultValue: 'C',
+            }
         }, {
             sequelize,
             timestamps: false,
             underscored: false,
-            modelName: 'COMMUNI_WHITE_LIST',
-            tableName: 'communi_white_list',
+            modelName: 'MOTIE_LOG_SYSTEM',
+            tableName: 'motie_log_system',
             paranoid: true,
             charset: 'utf8',
             collate: 'utf8_general_ci',

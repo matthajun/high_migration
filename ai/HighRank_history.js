@@ -36,10 +36,10 @@ Array.prototype.division = function (n) {
 };
 
 module.exports.searchAndtransm = async function(req) {
-    schedule.scheduleJob('42 * * * * *', async function() {
+    schedule.scheduleJob('48 * * * * *', async function() {
         let time = setDateTime.setDateTime_Twoago();
 
-        const query = `select * from dti.motie_ai_single_log where version > '${time}'`;
+        const query = `select * from dti.motie_ai_history where validation_time > '${time}'`;
 
         let rtnResult = {};
         try {
@@ -55,12 +55,12 @@ module.exports.searchAndtransm = async function(req) {
                     let motherTable = rslt.division(20);
 
                     for(let daughtTable of motherTable){
-                        tableInfo = {tableName: 'motie_ai_single_log', tableData: _.cloneDeep(daughtTable)};
+                        tableInfo = {tableName: 'motie_ai_history', tableData: _.cloneDeep(daughtTable)};
                         makereq.highrankPush(tableInfo);
                     }
                 }
                 else if(rslt.length) {
-                    tableInfo = {tableName: 'motie_ai_single_log', tableData: _.cloneDeep(rslt)};
+                    tableInfo = {tableName: 'motie_ai_history', tableData: _.cloneDeep(rslt)};
                     winston.info('**************************** Data is transmitted ************************************');
                     makereq.highrankPush(tableInfo);
                 }

@@ -1,29 +1,47 @@
+const dotenv = require('dotenv');
+dotenv.config();
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const session = require('express-session');
-const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
-const makejson = require('./utils/makejson');
 const winston = require('./config/winston')(module);
-dotenv.config();
-//const v1 = require('./routes/v1');
-const api = require('./routes/api');
 const { sequelize } = require('./models');
 
 const app = express();
 app.set('port', process.env.PORT || 8002);
 
-const stix_state = require('./STIX_service/stixInsert_managstate');
-
-const HighRank = require('./service/HighRank');
 const HighRank_corr1 = require('./ai/HighRank_corr1');
 const HighRank_corr2 = require('./ai/HighRank_corr2');
 const HighRank_log = require('./ai/HighRank_log');
 const HighRank_packet = require('./ai/HighRank_packet');
 const HighRank_op1 = require('./ai/HighRank_op1');
 const HighRank_op2 = require('./ai/HighRank_op2');
+const HighRank_history = require('./ai/HighRank_history');
+
+const HighRank = require('./HighRank');
+
+const HighRank_Policy = require('./policy/HighRank_policy_update');
+const HighRank_communi = require('./policy/HighRank_communi_update');
+const HighRank_log_update = require('./policy/HighRank_log_update');
+const HighRank_asset = require('./policy/HighRank_asset_update');
+const HighRank_asset_ip = require('./policy/HighRank_asset_ip_update');
+
+const singleRule = require('./policy/HighRank_Rulesingle_update');
+const multiRule = require('./policy/HighRank_Rulemulti_update');
+const mapRule = require('./policy/HighRank_Rulemap_update');
+const fileTrans = require('./fileTrans');
+const Signature = require('./policy/HighRank_signature_update');
+
+const api = require('./routes/api');
+
+const makejson = require('./utils/makejson');
+
+const http = require('http');
+const https = require('https');
+
+app.set('port', process.env.PORT);
 
 //app.set('view engine', 'html');
 sequelize.sync({ force: false })
@@ -34,14 +52,32 @@ sequelize.sync({ force: false })
         winston.error(err.stack);
     });
 
+var protocol = 'https';
+
+if (protocol === 'https') {
+    var sslConfig = require('./config/ssl-config');
+    var options = {
+        key: sslConfig.privateKey,
+        cert: sslConfig.certificate
+    };
+    server = https.createServer(options, app).listen(process.env.PORT);
+} else {
+    server = http.createServer(app);
+}
 
 app.use(morgan( process.env.NODE_ENV !== 'production'?'dev':'combined',{stream:winston.httpLogStream}));
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
+
+app.use('/api', api);
+
+app.use(function(req, res, next) {
+    next(createError(404));
+});
+
 app.use(session({
     resave: false,
     saveUninitialized: false,
@@ -51,6 +87,14 @@ app.use(session({
         secure: false,
     },
 }));
+
+app.use((err, req, res, next) => {
+    res.locals.message = err.message;
+    res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
+    res.status(err.status || 500);
+    winston.error(err.stack);
+    res.json(makejson.makeResData(err,req))
+});
 
 // Other settings
 app.use(bodyParser.json());
@@ -62,32 +106,13 @@ app.use(function (req, res, next) { // 1
     next();
 });
 
-//app.use('/v1', v1);
-app.use('/api', api);
-
 app.use((req, res, next) => {
     const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
     error.status = 404;
     next(error);
 });
 
-
-app.use((err, req, res, next) => {
-    res.locals.message = err.message;
-    res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
-    res.status(err.status || 500);
-    winston.error(err.stack);
-    res.json(makejson.makeResData(err,req))
-});
-
 app.set('etag', false);
-
-app.listen(app.get('port'), () => {
-    winston.info(app.get('port')+ '번 포트에서 대기중');
-});
-
-HighRank.searchAndtransm();
-stix_state.searchAndInsert();
 
 //클릭하우스 AI 결과테이블 상위연계
 HighRank_corr1.searchAndtransm();
@@ -96,3 +121,20 @@ HighRank_log.searchAndtransm();
 HighRank_packet.searchAndtransm();
 HighRank_op1.searchAndtransm();
 HighRank_op2.searchAndtransm();
+HighRank_history.searchAndtransm();
+
+//자산, 룰, 정책 생성(Create)상위연계
+HighRank.searchAndtransm();
+
+HighRank_Policy.searchAndtransm();
+HighRank_communi.searchAndtransm();
+HighRank_log_update.searchAndtransm();
+HighRank_asset.searchAndtransm();
+HighRank_asset_ip.searchAndtransm();
+
+singleRule.searchAndtransm();
+multiRule.searchAndtransm();
+mapRule.searchAndtransm();
+Signature.searchAndtransm();
+
+//fileTrans.searchAndTrans(); //단위테스트용

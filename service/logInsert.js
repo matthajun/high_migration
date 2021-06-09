@@ -12,7 +12,7 @@ module.exports.parseAndInsert = async function(req){
     const Data = req.body.tableData;
     let rtnResult = {};
 
-    switch (Data.state) {
+    switch (Data.state_level) {
         case 'U' :
             try {
                 const result = await db.sequelize.transaction(async (t) => {
@@ -20,16 +20,16 @@ module.exports.parseAndInsert = async function(req){
                     winston.info("******************* Update start *************************");
 
                     //Data가 단일
-                    let rslt = await db[masterTableName.toUpperCase()].upsert({id: Data.id, stationId:Data.stationId, powerGenId: Data.powerGenId, unit: Data.unit,
-                        make:Data.make, name: Data.name, protocolType: Data.protocolType, detailProtocol: Data.detailProtocol, srcIp: Data.srcIp, dstIp: Data.dstIp,
-                        srcPort: Data.srcPort, dstPort: Data.dstPort, state: 'U', fstDttm: Data.fstDttm, lstDttm: Data.lstDttm,
-                        fstUser: Data.fstUser, lstUser: Data.lstUser, trans_tag: 'E'},{id: Data.id}).then(
+                    let rslt = await db[masterTableName.toUpperCase()].upsert({id: Data.id, stationId:Data.stationId, powerGenId: Data.powerGenId, assetNm: Data.assetNm,
+                        cpuNotice:Data.cpuNotice, cpuWarning: Data.cpuWarning, memoryNotice: Data.memoryNotice, memoryWarning: Data.memoryWarning, diskNotice: Data.diskNotice, diskwarning: Data.diskwarning,
+                        levelLow: Data.levelLow, levelHight: Data.levelHight, content: Data.content, fstUser: Data.fstUser, lstUser: Data.lstUser, fstDttm: Data.fstDttm, lstDttm: Data.lstDttm,
+                        state_level: 'U', state_limit: 'U', trans_tag: 'E'},{id: Data.id}).then(
                         () => {
                             winston.info('upsert 완료!');
                         });
 
                     if(rslt instanceof Error){
-                        winston.error("************* 정책 업데이트 에러 발생!! **************");
+                        winston.error("************* 로그임계치 업데이트 에러 발생!! **************");
                         throw new rslt;
                     }
 
@@ -39,7 +39,7 @@ module.exports.parseAndInsert = async function(req){
             } catch (error) {
                 // If the execution reaches this line, an error occurred.
                 // The transaction has already been rolled back automatically by Sequelize!
-                winston.error("************* 정책 업데이트 에러 발생!! **************");
+                winston.error("************* 로그임계치 업데이트 에러 발생!! **************");
                 winston.error(error.stack);
                 rtnResult =  error;
             } finally {
@@ -55,17 +55,17 @@ module.exports.parseAndInsert = async function(req){
                     winston.info("******************* Delete start *************************");
 
                     //Data가 단일
-                    let rslt = await db[masterTableName.toUpperCase()].upsert({id: Data.id, stationId:Data.stationId, powerGenId: Data.powerGenId, unit: Data.unit,
-                        make:Data.make, name: Data.name, protocolType: Data.protocolType, detailProtocol: Data.detailProtocol, srcIp: Data.srcIp, dstIp: Data.dstIp,
-                        srcPort: Data.srcPort, dstPort: Data.dstPort, state: 'DE', fstDttm: Data.fstDttm, lstDttm: Data.lstDttm,
-                        fstUser: Data.fstUser, lstUser: Data.lstUser, trans_tag: 'E'},{id: Data.id}).then(
+                    let rslt = await db[masterTableName.toUpperCase()].upsert({id: Data.id, stationId:Data.stationId, powerGenId: Data.powerGenId, assetNm: Data.assetNm,
+                        cpuNotice:Data.cpuNotice, cpuWarning: Data.cpuWarning, memoryNotice: Data.memoryNotice, memoryWarning: Data.memoryWarning, diskNotice: Data.diskNotice, diskwarning: Data.diskwarning,
+                        levelLow: Data.levelLow, levelHight: Data.levelHight, content: Data.content, fstUser: Data.fstUser, lstUser: Data.lstUser, fstDttm: Data.fstDttm, lstDttm: Data.lstDttm,
+                        state_level: 'DE', state_limit: 'DE', trans_tag: 'E'},{id: Data.id}).then(
                         () => {
                             winston.info('딜리트 완료!');
                         }
                     );
 
                     if(rslt instanceof Error){
-                        winston.error("************* 정책 딜리트 에러 발생!! **************");
+                        winston.error("************* 로그임계치 딜리트 에러 발생!! **************");
                         throw new rslt;
                     }
 
@@ -76,7 +76,7 @@ module.exports.parseAndInsert = async function(req){
             } catch (error) {
                 // If the execution reaches this line, an error occurred.
                 // The transaction has already been rolled back automatically by Sequelize!
-                winston.error("************* 정책 업데이트 에러 발생!! **************");
+                winston.error("************* 로그임계치 업데이트 에러 발생!! **************");
                 winston.error(error.stack);
                 rtnResult =  error;
             } finally {
@@ -86,7 +86,18 @@ module.exports.parseAndInsert = async function(req){
             break;
 
         default:
-            req.body.tableData.trans_tag = 'E';
+            if (Array.isArray(req.body.tableData)) {
+                for (tableData of req.body.tableData) {
+                    tableData.state_limit = 'C';
+                    tableData.state_level = 'C';
+                    tableData.trans_tag = 'E';
+                }
+            }
+            else {
+                req.body.tableData.state_limit = 'C';
+                req.body.tableData.state_level = 'C';
+                tableData.trans_tag = 'E';
+            }
             rtnResult = await reqInsert.parseAndInsert(req);
 
             break;

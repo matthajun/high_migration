@@ -22,11 +22,24 @@ const clickhouse = new ClickHouse({
     },
 });
 
+Array.prototype.division = function (n) {
+    let arr = this;
+    let len = arr.length;
+    let cnt = Math.floor(len / n) + (Math.floor(len % n) > 0 ? 1 : 0);
+    let tmp = [];
+
+    for (let i = 0; i < cnt; i++) {
+        tmp.push(arr.splice(0, n));
+    }
+
+    return tmp;
+};
+
 module.exports.searchAndtransm = async function(req) {
     schedule.scheduleJob('44 * * * * *', async function() {
-        let time = setDateTime.setDateTime_oneago();
+        let time = setDateTime.setDateTime_Twoago();
 
-        const query = `select * from dti.motie_ai_op_prep where date_time > '${time}'`;
+        const query = `select * from dti.motie_ai_op_prep where version > '${time}'`;
 
         let rtnResult = {};
         try {
@@ -36,10 +49,20 @@ module.exports.searchAndtransm = async function(req) {
             if (rslt instanceof Error) {
                 throw new Error(rslt);
             } else {
-                tableInfo = {tableName: 'motie_ai_op_prep', tableData: rslt};
-                console.log(tableInfo);
-                if(tableInfo.tableData.length) {
-                    //makereq.highrankPush(tableInfo);
+                if(rslt.length > 20){
+                    winston.info('**************************** Data is transmitted ************************************');
+                    winston.info('******************************** Value 갯수가 20개가 넘었습니다. ********************************')
+                    let motherTable = rslt.division(20);
+
+                    for(let daughtTable of motherTable){
+                        tableInfo = {tableName: 'motie_ai_op_prep', tableData: _.cloneDeep(daughtTable)};
+                        makereq.highrankPush(tableInfo);
+                    }
+                }
+                else if(rslt.length) {
+                    tableInfo = {tableName: 'motie_ai_op_prep', tableData: _.cloneDeep(rslt)};
+                    winston.info('**************************** Data is transmitted ************************************');
+                    makereq.highrankPush(tableInfo);
                 }
             }
         } catch (error) {

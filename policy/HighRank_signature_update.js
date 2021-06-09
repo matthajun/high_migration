@@ -6,25 +6,28 @@ const schedule = require('node-schedule');
 const _ = require('loadsh');
 
 module.exports.searchAndtransm = async function() {
-    schedule.scheduleJob(process.env.POLICY_TIME, async function() {
+    schedule.scheduleJob(process.env.SIG_TIME, async function() {
         let rtnResult = {};
         try {
             const result = await db.sequelize.transaction(async (t) => {
                 let tableInfo = {};
 
-                let tableName = process.env.BW_LIST_TABLE;
+                let tableName = process.env.SIGNATURE_TABLE;
 
-                let rslt = await db[tableName.toUpperCase()].findAll({where: {state: 'D'}}).then(users => {
+                let rslt = await db[tableName.toUpperCase()].findAll({where: {state: 'D'}}).then(async users => {
                     if (users) {
                         for (user of users) {
                             let data = {};
                             data = user.dataValues;
+                            await user.update({state: 'DE', trans_tag: 'E'});
+                            data.state = 'DE'; data.trans_tag = 'E';
+
                             if(data) {
-                                winston.info("******************* Policy update!! *************************");
+                                winston.info("******************* Siginature delete!! *************************");
                                 tableInfo = {tableName: tableName, tableData: _.cloneDeep(data)};
                                 makereq.highrankPush(tableInfo);
                             }
-                            user.update({state: 'DE', trans_tag: 'E'});
+
                         }
                     }
                 });
