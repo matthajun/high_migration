@@ -13,11 +13,6 @@ module.exports.parseAndInsert = async function(req){
     let rtnResult = {};
     let state;
 
-    if(Data.state === 'D')
-        state = 'DE';
-    else
-        state = Data.state;
-
     try {
         const result = await db.sequelize.transaction(async (t) => {
             winston.info("********************************************************************************");

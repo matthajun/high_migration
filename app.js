@@ -135,6 +135,6 @@ HighRank_asset_ip.searchAndtransm();
 singleRule.searchAndtransm();
 multiRule.searchAndtransm();
 mapRule.searchAndtransm();
-Signature.searchAndtransm();
+//Signature.searchAndtransm();
 
 //fileTrans.searchAndTrans(); //단위테스트용
