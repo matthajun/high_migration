@@ -39,7 +39,7 @@ module.exports.searchAndtransm = async function(req) {
     schedule.scheduleJob('45 * * * * *', async function() {
         let time = setDateTime.setDateTime_Twoago();
 
-        const query = `select * from dti.motie_ai_op_result where version > '${time}'`;
+        const query = `select * from dti.motie_ai_op_result where version > '${time}' and ai_label = 'True' `;
 
         let rtnResult = {};
         try {
