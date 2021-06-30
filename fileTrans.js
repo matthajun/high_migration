@@ -20,7 +20,8 @@ module.exports.searchAndTrans = async function() {
                         let data = {};
                         data = user.dataValues;
 
-                        const sendReq = request.post({url: process.env.BUMUN_ADDRESS_FILE}, function (err, resp, body) {
+                        const sendReq = request.post({url: process.env.BUMUN_ADDRESS_FILE, agentOptions: {rejectUnauthorized: false
+                        }}, function (err, resp, body) {
                             if (err) {
                                 console.log(err);
                             } else {

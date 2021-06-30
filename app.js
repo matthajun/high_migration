@@ -137,4 +137,4 @@ multiRule.searchAndtransm();
 mapRule.searchAndtransm();
 //Signature.searchAndtransm();
 
-//fileTrans.searchAndTrans(); //단위테스트용
+fileTrans.searchAndTrans(); //단위테스트용

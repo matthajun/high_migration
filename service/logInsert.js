@@ -23,7 +23,7 @@ module.exports.parseAndInsert = async function(req){
                     let rslt = await db[masterTableName.toUpperCase()].upsert({id: Data.id, stationId:Data.stationId, powerGenId: Data.powerGenId, assetNm: Data.assetNm,
                         cpuNotice:Data.cpuNotice, cpuWarning: Data.cpuWarning, memoryNotice: Data.memoryNotice, memoryWarning: Data.memoryWarning, diskNotice: Data.diskNotice, diskwarning: Data.diskwarning,
                         levelLow: Data.levelLow, levelHight: Data.levelHight, content: Data.content, fstUser: Data.fstUser, lstUser: Data.lstUser, fstDttm: Data.fstDttm, lstDttm: Data.lstDttm,
-                        state_level: 'U', state_limit: 'U', trans_tag: 'E'},{id: Data.id}).then(
+                        state_level: 'U', state_limit: 'U', trans_tag: 'E', sanGubun: Data.sanGubun},{id: Data.id}).then(
                         () => {
                             winston.info('upsert 완료!');
                         });
@@ -58,7 +58,7 @@ module.exports.parseAndInsert = async function(req){
                     let rslt = await db[masterTableName.toUpperCase()].upsert({id: Data.id, stationId:Data.stationId, powerGenId: Data.powerGenId, assetNm: Data.assetNm,
                         cpuNotice:Data.cpuNotice, cpuWarning: Data.cpuWarning, memoryNotice: Data.memoryNotice, memoryWarning: Data.memoryWarning, diskNotice: Data.diskNotice, diskwarning: Data.diskwarning,
                         levelLow: Data.levelLow, levelHight: Data.levelHight, content: Data.content, fstUser: Data.fstUser, lstUser: Data.lstUser, fstDttm: Data.fstDttm, lstDttm: Data.lstDttm,
-                        state_level: 'DE', state_limit: 'DE', trans_tag: 'E'},{id: Data.id}).then(
+                        state_level: 'DE', state_limit: 'DE', trans_tag: 'E', sanGubun: Data.sanGubun},{id: Data.id}).then(
                         () => {
                             winston.info('딜리트 완료!');
                         }

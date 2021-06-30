@@ -22,7 +22,7 @@ module.exports.parseAndInsert = async function(req){
                     //Data가 단일
                     let rslt = await db[masterTableName.toUpperCase()].upsert({id: Data.id, type:Data.type, name: Data.name, stationId: Data.stationId,
                         powerGenId: Data.powerGenId, unit: Data.unit, make:Data.make, port: Data.port, ip: Data.ip, fstDttm: Data.fstDttm, lstDttm: Data.lstDttm,
-                        fstUser: Data.fstUser, lstUser: Data.lstUser, state: 'U', trans_tag: 'E'},{id: Data.id}).then(
+                        fstUser: Data.fstUser, lstUser: Data.lstUser, sanGubun: Data.sanGubun, state: 'U', trans_tag: 'E'},{id: Data.id}).then(
                         () => {
                             winston.info('upsert 완료!');
                         });
@@ -56,7 +56,7 @@ module.exports.parseAndInsert = async function(req){
                     //Data가 단일
                     let rslt = await db[masterTableName.toUpperCase()].upsert({id: Data.id, type:Data.type, name: Data.name, stationId: Data.stationId,
                         powerGenId: Data.powerGenId, unit: Data.unit, make:Data.make, port: Data.port, ip: Data.ip, fstDttm: Data.fstDttm, lstDttm: Data.lstDttm,
-                        fstUser: Data.fstUser, lstUser: Data.lstUser, state: 'DE', trans_tag: 'E'},{id: Data.id}).then(
+                        fstUser: Data.fstUser, lstUser: Data.lstUser, sanGubun: Data.sanGubun, state: 'DE', trans_tag: 'E'},{id: Data.id}).then(
                         () => {
                             winston.info('딜리트 완료!');
                         }

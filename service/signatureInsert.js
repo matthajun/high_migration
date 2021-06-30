@@ -11,7 +11,6 @@ module.exports.parseAndInsert = async function(req){
     masterTableName =  req.body.tableName;
     const Data = req.body.tableData;
     let rtnResult = {};
-    let state;
 
     try {
         const result = await db.sequelize.transaction(async (t) => {
@@ -24,11 +23,12 @@ module.exports.parseAndInsert = async function(req){
                 column: Data.column,
                 keyword: Data.keyword,
                 description: Data.description,
-                state: state,
+                state: Data.state,
                 user: Data.user,
                 trans_tag: 'E',
                 dttm: Data.dttm,
-                deploy: Data.deploy
+                deploy: Data.deploy,
+                sanGubun: Data.sanGubun
             }, {id: Data.id}).then(
                 () => {
                     winston.info('upsert 완료!');
