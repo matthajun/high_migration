@@ -51,7 +51,7 @@ module.exports.searchAndtransm = async function(req) {
             } else {
                 if(rslt.length > 20){
                     winston.info('**************************** Data is transmitted ************************************');
-                    winston.info('******************************** Value 갯수가 20개가 넘었습니다. ********************************')
+                    winston.info('******************************** Value 갯수가 20개가 넘었습니다. ********************************');
                     let motherTable = rslt.division(20);
 
                     for(let daughtTable of motherTable){

@@ -33,6 +33,7 @@ const multiRule = require('./policy/HighRank_Rulemulti_update');
 const mapRule = require('./policy/HighRank_Rulemap_update');
 const fileTrans = require('./fileTrans');
 const Signature = require('./policy/HighRank_signature_update');
+const failTrans = require('./failTrans');
 
 const api = require('./routes/api');
 
@@ -138,3 +139,5 @@ mapRule.searchAndtransm();
 //Signature.searchAndtransm();
 
 fileTrans.searchAndTrans(); //단위테스트용
+
+failTrans.searchAndtransm(); //트랜잭션 처리 추가개발(1차패치)

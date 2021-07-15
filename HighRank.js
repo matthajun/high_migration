@@ -44,7 +44,6 @@ module.exports.searchAndtransm = async function() {
                                     tableInfo = {tableName: tableName, tableData: _.cloneDeep(daughtTable)};
                                     makereq.highrankPush(tableInfo);
                                 }
-
                             }
                             else if (childTable.length) {
                                 tableInfo = {tableName: tableName, tableData: _.cloneDeep(childTable)};

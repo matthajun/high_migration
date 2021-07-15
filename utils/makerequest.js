@@ -8,8 +8,9 @@ module.exports.highrankPush = async function(value) {
     let confirmCode = confirmutils.makeConfirmCode(value.tableData);
     value.confirm_code = confirmCode;
 
-    await httpcall.Call('post', process.env.BUMUN_ADDRESS, value, async function (err, res) {
-        winston.info("*************************** " + value.tableName + " is transmitted*****************************");
+    let result = {};
+
+    httpcall.Call('post', process.env.BUMUN_ADDRESS, value, async function (err, res) {
         if(value.tableName.indexOf('ai_op') === -1) {
             if(Array.isArray(value.tableData)) {
                 for (tableData of value.tableData) {
@@ -30,8 +31,11 @@ module.exports.highrankPush = async function(value) {
                 await db['MOTIE_TRANSMISSION_HISTORY'].create(data);
             }
         }
-        if (err instanceof Error) {
-            throw new Error(err);
+        if (err) {
+            throw Error(err);
+        }
+        else{
+            winston.info("*************************** " + value.tableName + " is transmitted*****************************");
         }
     });
 };
