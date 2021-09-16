@@ -12,10 +12,10 @@ module.exports.searchAndTrans = async function() {
     schedule.scheduleJob("*/10 * * * * *", async function () {
         let rtnResult = {};
         try {
-            let tableName = process.env.H009_TABLE;
-            let rslt = await db[tableName.toUpperCase()].findAll({where: {file_tag: 'C'}}).then(users => {
+            let tableName = 'kdn_amly_H008_file_list';
+            let rslt = await db[tableName.toUpperCase()].findAll({where: {file_tag: 'C', sectValue: 'Y'}}).then(users => {
                 if (users.length) {
-                    winston.info('********************** 파일을 전송합니다. ************************');
+                    winston.info('********************** 부문시스템에서 요청한 파일을 전송합니다. ************************');
                     for (user of users) {
                         let data = {};
                         data = user.dataValues;
@@ -24,14 +24,12 @@ module.exports.searchAndTrans = async function() {
                         }}, function (err, resp, body) {
                             if (err) {
                                 console.log(err);
-                            } else {
-                                console.log('pcap 파일 전송, URL: ' + body);
                             }
                         });
 
                         const form = sendReq.form();
-                        form.append('my_file', fs.createReadStream(__dirname + `${path.sep}downloads${path.sep}`+data.file_name), {filename: data.file_name});
-
+                        form.append('my_file', fs.createReadStream(__dirname + `${path.sep}downloads${path.sep}`+data.file_list), {filename: data.file_list});
+                        winston.info('********************** 전송 파일 명 : '+JSON.stringify(data.file_list));
                         user.update({file_tag: 'E'});
                     }
                 }

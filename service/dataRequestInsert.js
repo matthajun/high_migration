@@ -11,11 +11,17 @@ module.exports.parseAndInsert = async function(req){
     masterTableName =  req.body.tableName;
     const Data = req.body.tableData;
     let rtnResult = {};
+    let state = '200';
 
     try {
         const result = await db.sequelize.transaction(async (t) => {
             winston.info("******************* Upsert start *************************");
-            console.log(masterTableName)
+
+            //피캡파일 요청 시 부문 플래그값 예외처리
+            if(Data.gubun === 'MORE_P'){
+                Data.sectValue = 'Y'
+            }
+
             let rslt = await db[masterTableName.toUpperCase()].upsert({
                 id: Data.id,
                 type: Data.type,
@@ -26,11 +32,12 @@ module.exports.parseAndInsert = async function(req){
                 deviceId: Data.deviceId,
                 startTime: Data.startTime,
                 endTime: Data.endTime,
-                state: '200',
+                state: state,
                 stateValue: Data.stateValue,
                 fstUser: Data.fstUser,
                 fstDttm: Data.fstDttm,
-                stationId: Data.stationId
+                stationId: Data.stationId,
+                sectValue: Data.sectValue
             }, {id: Data.id}).then(
                 () => {
                     winston.info('upsert 완료!');

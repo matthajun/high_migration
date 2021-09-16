@@ -34,6 +34,7 @@ const mapRule = require('./policy/HighRank_Rulemap_update');
 const fileTrans = require('./fileTrans');
 const Signature = require('./policy/HighRank_signature_update');
 const failTrans = require('./failTrans');
+const H009Trans = require('./policy/H009_transport');
 
 const api = require('./routes/api');
 
@@ -120,7 +121,7 @@ HighRank_corr1.searchAndtransm();
 HighRank_corr2.searchAndtransm();
 HighRank_log.searchAndtransm();
 HighRank_packet.searchAndtransm();
-HighRank_op1.searchAndtransm();
+//HighRank_op1.searchAndtransm();
 HighRank_op2.searchAndtransm();
 HighRank_history.searchAndtransm();
 
@@ -138,6 +139,8 @@ multiRule.searchAndtransm();
 mapRule.searchAndtransm();
 //Signature.searchAndtransm();
 
-fileTrans.searchAndTrans(); //단위테스트용
+fileTrans.searchAndTrans(); //단위테스트용(8월20일, 부문태그 추가하여 수정완료)
 
-failTrans.searchAndtransm(); //트랜잭션 처리 추가개발(1차패치)
+//failTrans.searchAndtransm(); //트랜잭션 처리 추가개발(1차패치)
+
+H009Trans.searchAndtransm(); //8월19일 추가 (H008->H009)

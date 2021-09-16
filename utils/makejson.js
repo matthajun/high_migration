@@ -16,70 +16,7 @@ module.exports.makeReqData = function (id){
     reqData.body = reqBody;
     return reqData;
 };
-/*
-module.exports.makeReqData_H004 = function (id, policy_type){
-    let reqData = {};
-    let reqBody = {"policy_type": policy_type };
 
-    const time = setDateTime.setDateTime();
-
-    const reqHeaderData = {"message_id": id, "keeper_id": process.env.KEEPER_ID, "send_time": time};
-    reqHeaderData.confirm_code = confirmutils.makeConfirmCode(JSON.stringify(reqBody));
-
-    reqData.header = reqHeaderData;
-    reqData.body = reqBody;
-    return reqData;
-};
-
-module.exports.makeReqData_H008 = function (id, body){
-    let reqData = {};
-    let reqBody = body;
-
-    const time = setDateTime.setDateTime();
-
-    const reqHeaderData = {"message_id": id, "keeper_id": process.env.KEEPER_ID, "send_time": time};
-    reqHeaderData.confirm_code = confirmutils.makeConfirmCode(JSON.stringify(reqBody));
-
-    reqData.header = reqHeaderData;
-    reqData.body = reqBody;
-    return reqData;
-};
-
-module.exports.makeReqData_L001 = function (id){
-    let reqData = {};
-
-    const time = setDateTime.setDateTime();
-
-    const reqHeaderData = {"message_id": id, "logger_id": ''};
-    const reqBody = {"loged_start_time": time, "loged_end_time": time};
-
-    reqData.header = reqHeaderData;
-    reqData.body = reqBody;
-    return reqData;
-};
-
-module.exports.makeReqData_L002 = function (id){
-    let reqData = {};
-
-    const reqHeaderData = {"message_id": id, "logger_id": ''};
-    const reqBody = {"format_array": ''};
-
-    reqData.header = reqHeaderData;
-    reqData.body = reqBody;
-    return reqData;
-};
-
-module.exports.makeReqData_L003 = function (id){
-    let reqData = {};
-
-    const reqHeaderData = {"message_id": id, "logger_id": ''};
-    const reqBody = {"plant_id_array": '', "device_id_array": ''};
-
-    reqData.header = reqHeaderData;
-    reqData.body = reqBody;
-    return reqData;
-};
-*/
 module.exports.makeResData = function (err, req){
     let resData={};
     let resBody={};
@@ -109,6 +46,35 @@ module.exports.makeResData = function (err, req){
     return resData;
 };
 
+module.exports.makeReqData_H009 = function (data){
+    let resData={};
+
+    let unit_id = '';
+    let make_id = '';
+
+    for(let k = 0 ; k<4 ; k++ ) {
+        unit_id += data.file_list.split('_')[k] ;
+        if (k !== 3)
+            unit_id += '_';
+    }
+
+    if (data.file_list.indexOf('GE_GT') !== -1){
+        make_id = unit_id + '_GE_GT';
+    }
+    else {
+        for (let k = 0; k < 5; k++) {
+            make_id += data.file_list.split('_')[k] ;
+            if (k !== 4)
+                make_id += '_';
+        }
+    }
+
+    resData.message_id = 'H009'; resData.keeper_id = data.keeper_id; resData.send_time = data.send_time; resData.unit_id = unit_id; resData.make_id = make_id;
+    resData.file_name = data.file_list; resData.date_time = data.date_time;
+
+    return resData;
+};
+
 module.exports.makeSTIXData_event= function (table) {
     const headerData = {flag: table.flag, timeAgent: table.timeAgent, timeZone: table.timezone, ipAgent: table.ipAgent, nameAgent: table.nameAgent, vendorAgent:table.vendorAgent, typeAgent: '', versionAgent: '',
         idOrganizationAgent: table.idOrganizationAgent, nameOperator: '', nameUnit: table.nameUnit, location: '', original: table.original};
@@ -129,10 +95,6 @@ module.exports.makeSTIXData_anomaly = function (table) {
     const totalData = {header: headerData, anomaly: bodyData};
 
     return totalData;
-}
-
-module.exports.makeSTIXData_traffic= function (table) {
-
 };
 
 module.exports.makeSTIXData_state = function (table) {
