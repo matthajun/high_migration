@@ -16,7 +16,6 @@ const HighRank_corr1 = require('./ai/HighRank_corr1');
 const HighRank_corr2 = require('./ai/HighRank_corr2');
 const HighRank_log = require('./ai/HighRank_log');
 const HighRank_packet = require('./ai/HighRank_packet');
-const HighRank_op1 = require('./ai/HighRank_op1');
 const HighRank_op2 = require('./ai/HighRank_op2');
 const HighRank_history = require('./ai/HighRank_history');
 
@@ -32,13 +31,13 @@ const singleRule = require('./policy/HighRank_Rulesingle_update');
 const multiRule = require('./policy/HighRank_Rulemulti_update');
 const mapRule = require('./policy/HighRank_Rulemap_update');
 const fileTrans = require('./fileTrans');
-const Signature = require('./policy/HighRank_signature_update');
 const failTrans = require('./failTrans');
 const H009Trans = require('./policy/H009_transport');
 
 const api = require('./routes/api');
 
 const makejson = require('./utils/makejson');
+const Delete_table = require('./policy/Delete_schedul_table');
 
 const http = require('http');
 const https = require('https');
@@ -137,10 +136,10 @@ HighRank_asset_ip.searchAndtransm();
 singleRule.searchAndtransm();
 multiRule.searchAndtransm();
 mapRule.searchAndtransm();
-//Signature.searchAndtransm();
 
-fileTrans.searchAndTrans(); //단위테스트용(8월20일, 부문태그 추가하여 수정완료)
+fileTrans.searchAndTrans(); //(8월20일, 부문태그 추가하여 수정완료)
 
-//failTrans.searchAndtransm(); //트랜잭션 처리 추가개발(1차패치)
+failTrans.searchAndtransm(); //트랜잭션 처리 추가개발(1차패치)
 
 H009Trans.searchAndtransm(); //8월19일 추가 (H008->H009)
+Delete_table.scheduleDelete();
