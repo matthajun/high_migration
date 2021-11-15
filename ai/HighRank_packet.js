@@ -46,6 +46,11 @@ module.exports.searchAndtransm = async function(req) {
             let tableInfo = {};
             let rslt = await clickhouse.query(query).toPromise();
 
+            //부문전송 block(11.03)처리
+            for (r of rslt){
+                r.ip = '';
+            }
+
             if (rslt instanceof Error) {
                 throw new Error(rslt);
             } else {

@@ -116,30 +116,30 @@ app.use((req, res, next) => {
 app.set('etag', false);
 
 //클릭하우스 AI 결과테이블 상위연계
-HighRank_corr1.searchAndtransm();
-HighRank_corr2.searchAndtransm();
+HighRank_corr1.searchAndtransm(); //부문전송금지(11.02)
+//HighRank_corr2.searchAndtransm();
 HighRank_log.searchAndtransm();
 HighRank_packet.searchAndtransm();
 //HighRank_op1.searchAndtransm();
 HighRank_op2.searchAndtransm();
-HighRank_history.searchAndtransm();
+//HighRank_history.searchAndtransm();  //부문전송금지(11.02)
 
 //자산, 룰, 정책 생성(Create)상위연계
 HighRank.searchAndtransm();
 
-HighRank_Policy.searchAndtransm();
-HighRank_communi.searchAndtransm();
-HighRank_log_update.searchAndtransm();
-HighRank_asset.searchAndtransm();
-HighRank_asset_ip.searchAndtransm();
+//HighRank_Policy.searchAndtransm();  //부문전송금지(11.02)
+//HighRank_communi.searchAndtransm();  //부문전송금지(11.02)
+//HighRank_log_update.searchAndtransm();  //부문전송금지(11.02)
+//HighRank_asset.searchAndtransm();  //부문전송금지(11.02)
+//HighRank_asset_ip.searchAndtransm();  //부문전송금지(11.02)
 
-singleRule.searchAndtransm();
-multiRule.searchAndtransm();
-mapRule.searchAndtransm();
+//singleRule.searchAndtransm();  //부문전송금지(11.02)
+//multiRule.searchAndtransm();  //부문전송금지(11.02)
+//mapRule.searchAndtransm();  //부문전송금지(11.02)
 
 fileTrans.searchAndTrans(); //(8월20일, 부문태그 추가하여 수정완료)
 
-failTrans.searchAndtransm(); //트랜잭션 처리 추가개발(1차패치)
+//failTrans.searchAndtransm(); //트랜잭션 처리 추가개발(1차패치,7월?)
 
 H009Trans.searchAndtransm(); //8월19일 추가 (H008->H009)
-Delete_table.scheduleDelete();
+Delete_table.scheduleDelete(); //10월29일 추가 (수집테이블 정리)
