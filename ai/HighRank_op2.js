@@ -22,6 +22,8 @@ const clickhouse = new ClickHouse({
     },
 });
 
+const timer = ms => new Promise(res => setTimeout(res, ms));
+
 Array.prototype.division = function (n) {
     let arr = this;
     let len = arr.length;
@@ -36,11 +38,15 @@ Array.prototype.division = function (n) {
 };
 
 module.exports.searchAndtransm = async function(req) {
-    schedule.scheduleJob('45 * * * * *', async function() {
+    schedule.scheduleJob('55 * * * * *', async function() {
         let time = setDateTime.setDateTime_Twoago();
 
-        //const query = `select * from dti.motie_ai_op_result where version > '${time}' and ai_label = 'True' `;  //부문위협시스템 운영정보 그래프 추가로 인한 쿼리수정(11월2일)
+        // let time_slip = setDateTime.setDateTime_1121(10, 1);
+        // let time_slip_plus = setDateTime.setDateTime_1121_plus(10);
+
         const query = `select * from dti.motie_ai_op_result where version > '${time}' `;
+        //const query = `select * from dti.motie_ai_op_result where version between '${time_slip}' and '${time_slip_plus}' `; //데이터전송테스트
+        console.log(query); //데이터전송테스트, 쿼리확인
 
         let rtnResult = {};
         try {
@@ -50,14 +56,15 @@ module.exports.searchAndtransm = async function(req) {
             if (rslt instanceof Error) {
                 throw new Error(rslt);
             } else {
-                if(rslt.length > 20){
+                if(rslt.length > 100){
                     winston.info('**************************** Data is transmitted ************************************');
-                    winston.info('******************************** Value 갯수가 20개가 넘었습니다. ********************************')
-                    let motherTable = rslt.division(20);
+                    winston.info('******************************** Value 갯수가 100개가 넘었습니다. ********************************')
+                    let motherTable = rslt.division(100);
 
                     for(let daughtTable of motherTable){
                         tableInfo = {tableName: 'motie_ai_op_result', tableData: _.cloneDeep(daughtTable)};
                         makereq.highrankPush(tableInfo);
+                        await timer(200);
                     }
                 }
                 else if(rslt.length) {

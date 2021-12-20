@@ -125,7 +125,7 @@ HighRank_op2.searchAndtransm();
 //HighRank_history.searchAndtransm();  //부문전송금지(11.02)
 
 //자산, 룰, 정책 생성(Create)상위연계
-HighRank.searchAndtransm();
+//HighRank.searchAndtransm();
 
 //HighRank_Policy.searchAndtransm();  //부문전송금지(11.02)
 //HighRank_communi.searchAndtransm();  //부문전송금지(11.02)

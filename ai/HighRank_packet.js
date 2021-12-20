@@ -22,6 +22,8 @@ const clickhouse = new ClickHouse({
     },
 });
 
+const timer = ms => new Promise(res => setTimeout(res, ms));
+
 Array.prototype.division = function (n) {
     let arr = this;
     let len = arr.length;
@@ -36,7 +38,7 @@ Array.prototype.division = function (n) {
 };
 
 module.exports.searchAndtransm = async function(req) {
-    schedule.scheduleJob('43 * * * * *', async function() {
+    schedule.scheduleJob('50 * * * * *', async function() {
         let time = setDateTime.setDateTime_Twoago();
 
         const query = `select * from dti.motie_ai_single_packet where version > '${time}'`;
@@ -54,14 +56,15 @@ module.exports.searchAndtransm = async function(req) {
             if (rslt instanceof Error) {
                 throw new Error(rslt);
             } else {
-                if(rslt.length > 20){
+                if(rslt.length > 100){
                     winston.info('**************************** Data is transmitted ************************************');
-                    winston.info('******************************** Value 갯수가 20개가 넘었습니다. ********************************')
-                    let motherTable = rslt.division(20);
+                    winston.info('******************************** Value 갯수가 100개가 넘었습니다. ********************************')
+                    let motherTable = rslt.division(100);
 
                     for(let daughtTable of motherTable){
                         tableInfo = {tableName: 'motie_ai_single_packet', tableData: _.cloneDeep(daughtTable)};
                         makereq.highrankPush(tableInfo);
+                        await timer(200);
                     }
                 }
                 else if(rslt.length) {
