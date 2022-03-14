@@ -37,16 +37,19 @@ Array.prototype.division = function (n) {
     return tmp;
 };
 
-module.exports.searchAndtransm = async function(req) {
+module.exports.searchAndtransm = async function() {
     schedule.scheduleJob('55 * * * * *', async function() {
-        let time = setDateTime.setDateTime_Twoago();
+        let a_time = setDateTime.setDateTime_whatago(6);
+        let b_time = setDateTime.setDateTime_whatago(5);
 
-        // let time_slip = setDateTime.setDateTime_1121(10, 1);
-        // let time_slip_plus = setDateTime.setDateTime_1121_plus(10);
+        let time_slip = setDateTime.setDateTime_1121(100, 1);   //데이터전송테스트
+        let time_slip_plus = setDateTime.setDateTime_1121_plus(100);  //데이터전송테스트
 
-        const query = `select * from dti.motie_ai_op_result where version > '${time}' `;
-        //const query = `select * from dti.motie_ai_op_result where version between '${time_slip}' and '${time_slip_plus}' `; //데이터전송테스트
-        console.log(query); //데이터전송테스트, 쿼리확인
+        // const query = `select * from dti.motie_ai_op_result where version >= '${a_time}' and version < '${b_time}'`;
+
+        const query = `select * from dti.motie_ai_op_result where version between '${time_slip}' and '${time_slip_plus}' `;  //데이터전송테스트
+
+        console.log(query);
 
         let rtnResult = {};
         try {
@@ -57,20 +60,22 @@ module.exports.searchAndtransm = async function(req) {
                 throw new Error(rslt);
             } else {
                 if(rslt.length > 100){
-                    winston.info('**************************** Data is transmitted ************************************');
-                    winston.info('******************************** Value 갯수가 100개가 넘었습니다. ********************************')
+                    winston.info('**************************** Data is transmitted , 건수 : '+ rslt.length + ' ************************************');
                     let motherTable = rslt.division(100);
 
                     for(let daughtTable of motherTable){
                         tableInfo = {tableName: 'motie_ai_op_result', tableData: _.cloneDeep(daughtTable)};
                         makereq.highrankPush(tableInfo);
-                        await timer(200);
+                        await timer(500);
                     }
                 }
                 else if(rslt.length) {
                     tableInfo = {tableName: 'motie_ai_op_result', tableData: _.cloneDeep(rslt)};
-                    winston.info('**************************** Data is transmitted ************************************');
+                    winston.info('**************************** Data is transmitted , 건수 : '+ rslt.length + ' ************************************');
                     makereq.highrankPush(tableInfo);
+                }
+                else {
+                    winston.info('**************************** 전송할 데이터가 없습니다. (스케쥴 결과 0건) ************************************');
                 }
             }
         } catch (error) {

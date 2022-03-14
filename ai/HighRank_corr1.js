@@ -37,11 +37,13 @@ Array.prototype.division = function (n) {
 
 const timer = ms => new Promise(res => setTimeout(res, ms));
 
-module.exports.searchAndtransm = async function(req) {
-    schedule.scheduleJob('30 * * * * *', async function() {
-        let time = setDateTime.setDateTime_Twoago();
+module.exports.searchAndtransm = async function() {
+    schedule.scheduleJob('10 * * * * *', async function() {
+        let a_time = setDateTime.setDateTime_whatago(6);
+        let b_time = setDateTime.setDateTime_whatago(5);
 
-        const query = `select * from dti.motie_ai_corr_result_v2 where version > '${time}'`;
+        const query = `select * from dti.motie_ai_corr_result_v2 where version >= '${a_time}' and version < '${b_time}'`;
+        console.log(query);
 
         let rtnResult = {};
         try {
@@ -57,20 +59,22 @@ module.exports.searchAndtransm = async function(req) {
                 throw new Error(rslt);
             } else {
                 if(rslt.length > 100){
-                    winston.info('**************************** Data is transmitted ************************************');
-                    winston.info('******************************** Value 갯수가 100개가 넘었습니다. ********************************')
+                    winston.info('**************************** Data is transmitted , 건수 : '+ rslt.length + ' ************************************');
                     let motherTable = rslt.division(100);
 
                     for(let daughtTable of motherTable){
                         tableInfo = {tableName: 'motie_ai_corr_result_v2', tableData: _.cloneDeep(daughtTable)};
                         makereq.highrankPush(tableInfo);
-                        await timer(200);
+                        await timer(1000);
                     }
                 }
                 else if(rslt.length) {
                     tableInfo = {tableName: 'motie_ai_corr_result_v2', tableData: _.cloneDeep(rslt)};
-                    winston.info('**************************** Data is transmitted ************************************');
+                    winston.info('**************************** Data is transmitted , 건수 : '+ rslt.length + ' ************************************');
                     makereq.highrankPush(tableInfo);
+                }
+                else {
+                    winston.info('**************************** 전송할 데이터가 없습니다. (스케쥴 결과 0건) ************************************');
                 }
             }
         } catch (error) {

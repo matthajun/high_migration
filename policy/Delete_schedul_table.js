@@ -17,11 +17,11 @@ module.exports.scheduleDelete = () => {
         let month_ago_time = setDateTime.setDateTime_H009(12); // 12개월 전 데이터 삭제 설정 부분
 
         try {
-            winston.info('********** ' + month_ago_time + ' 이전의 Pcap(패킷 전수) 데이터를 삭제합니다. ************************');
+            winston.info('********** ' + month_ago_time + ' 이전의 수집 데이터를 삭제합니다. ************************');
 
             for (tableName of tables) {
                 let rslt = await db[tableName.toUpperCase()].destroy({where: {date_time: {[Op.lt]: month_ago_time}}}).then(() => {
-                    winston.info('********** 테이블 ' + tableName + ' 의 데이터를 삭제합니다. (6개월 전) ************************');
+                    winston.info('********** 테이블 ' + tableName + ' 의 데이터를 삭제합니다. (12개월 전) ************************');
                 });
                 await timer(15000);
             }

@@ -4,6 +4,11 @@ module.exports.setDateTime = function () {
     return moment().format("YYYYMMDDHHmmss");
 };
 
+module.exports.setDateTime_whatago = function (mm) {
+    let a = moment().subtract(mm,'minutes');
+    return a.format("YYYY-MM-DD HH:mm:ss");
+};
+
 module.exports.setDateTime_Twoago = function () {
     let a = moment().subtract(1,'minutes');
     return a.format("YYYY-MM-DD HH:mm:ss");
@@ -18,6 +23,9 @@ module.exports.setDateTime_H009 = function (mm) {
     return a.format('YYYYMMDDHHmmss')
 };
 
+
+
+//시간 임의요청할 시 사용!
 module.exports.setDateTime_1121 = function (day, mm) {
     let a = moment().subtract(day, 'day').subtract(mm, 'minutes');
     return a.format('YYYY-MM-DD HH:mm:ss');

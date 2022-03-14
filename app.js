@@ -13,11 +13,9 @@ const app = express();
 app.set('port', process.env.PORT || 8002);
 
 const HighRank_corr1 = require('./ai/HighRank_corr1');
-const HighRank_corr2 = require('./ai/HighRank_corr2');
 const HighRank_log = require('./ai/HighRank_log');
 const HighRank_packet = require('./ai/HighRank_packet');
 const HighRank_op2 = require('./ai/HighRank_op2');
-const HighRank_history = require('./ai/HighRank_history');
 
 const HighRank = require('./HighRank');
 
@@ -116,13 +114,10 @@ app.use((req, res, next) => {
 app.set('etag', false);
 
 //클릭하우스 AI 결과테이블 상위연계
-HighRank_corr1.searchAndtransm(); //부문전송금지(11.02)
-//HighRank_corr2.searchAndtransm();
+HighRank_corr1.searchAndtransm();
 HighRank_log.searchAndtransm();
 HighRank_packet.searchAndtransm();
-//HighRank_op1.searchAndtransm();
 HighRank_op2.searchAndtransm();
-//HighRank_history.searchAndtransm();  //부문전송금지(11.02)
 
 //자산, 룰, 정책 생성(Create)상위연계
 //HighRank.searchAndtransm();
@@ -137,9 +132,9 @@ HighRank_op2.searchAndtransm();
 //multiRule.searchAndtransm();  //부문전송금지(11.02)
 //mapRule.searchAndtransm();  //부문전송금지(11.02)
 
-fileTrans.searchAndTrans(); //(8월20일, 부문태그 추가하여 수정완료)
+//fileTrans.searchAndTrans(); //(8월20일, 부문태그 추가하여 수정완료)
 
 //failTrans.searchAndtransm(); //트랜잭션 처리 추가개발(1차패치,7월?)
 
-H009Trans.searchAndtransm(); //8월19일 추가 (H008->H009)
+//H009Trans.searchAndtransm(); //8월19일 추가 (H008->H009)
 Delete_table.scheduleDelete(); //10월29일 추가 (수집테이블 정리)
