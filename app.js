@@ -105,6 +105,8 @@ app.use(function (req, res, next) { // 1
     next();
 });
 
+
+
 app.use((req, res, next) => {
     const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
     error.status = 404;
@@ -113,7 +115,7 @@ app.use((req, res, next) => {
 
 app.set('etag', false);
 
-//클릭하우스 AI 결과테이블 상위연계
+//클릭하우스 AI 결과테이블 상위연계(22.03.14)
 HighRank_corr1.searchAndtransm();
 HighRank_log.searchAndtransm();
 HighRank_packet.searchAndtransm();
