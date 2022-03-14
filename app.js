@@ -29,7 +29,6 @@ const singleRule = require('./policy/HighRank_Rulesingle_update');
 const multiRule = require('./policy/HighRank_Rulemulti_update');
 const mapRule = require('./policy/HighRank_Rulemap_update');
 const fileTrans = require('./fileTrans');
-const failTrans = require('./failTrans');
 const H009Trans = require('./policy/H009_transport');
 
 const api = require('./routes/api');
@@ -45,7 +44,7 @@ app.set('port', process.env.PORT);
 //app.set('view engine', 'html');
 sequelize.sync({ force: false })
     .then(() => {
-        winston.info('success db connect ');
+        winston.info('success db connect (ver. 22 03 30) ');
     })
     .catch((err) => {
         winston.error(err.stack);
@@ -135,8 +134,6 @@ HighRank_op2.searchAndtransm();
 //mapRule.searchAndtransm();  //부문전송금지(11.02)
 
 //fileTrans.searchAndTrans(); //(8월20일, 부문태그 추가하여 수정완료)
-
-//failTrans.searchAndtransm(); //트랜잭션 처리 추가개발(1차패치,7월?)
 
 //H009Trans.searchAndtransm(); //8월19일 추가 (H008->H009)
 Delete_table.scheduleDelete(); //10월29일 추가 (수집테이블 정리)
