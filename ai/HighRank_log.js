@@ -39,14 +39,17 @@ const timer = ms => new Promise(res => setTimeout(res, ms));
 
 module.exports.searchAndtransm = async function() {
     schedule.scheduleJob('20 * * * * *', async function() {
+        /* 실제 코드 */
         let a_time = setDateTime.setDateTime_whatago(6);
         let b_time = setDateTime.setDateTime_whatago(5);
 
-        // let time_slip = setDateTime.setDateTime_1121(100, 1);   //데이터전송테스트
-        // let time_slip_plus = setDateTime.setDateTime_1121_plus(100);  //데이터전송테스트
-
         const query = `select * from dti.motie_ai_single_log where version >= '${a_time}' and version < '${b_time}'`;
 
+
+        /* !!!!!! 테스트전용 코드 !!!!!! */
+        // let time_slip = setDateTime.setDateTime_1121(150, 1);   //데이터전송테스트
+        // let time_slip_plus = setDateTime.setDateTime_1121_plus(150);  //데이터전송테스트
+        //
         // const query = `select * from dti.motie_ai_single_log where version between '${time_slip}' and '${time_slip_plus}' `;  //데이터전송테스트
 
         console.log(query);
@@ -56,7 +59,7 @@ module.exports.searchAndtransm = async function() {
             let tableInfo = {};
             let rslt = await clickhouse.query(query).toPromise();
 
-            //부문전송 block(11.03)처리
+            //부문전송 ip 부분 block (11.03)
             for (r of rslt){
                 r.ip = '';
             }
@@ -64,7 +67,13 @@ module.exports.searchAndtransm = async function() {
             if (rslt instanceof Error) {
                 throw new Error(rslt);
             } else {
-                if(rslt.length > 100){
+                if(rslt.length > 10000){
+                    //부문으로 전송하려는 데이터가 10,000건 이상일 시 빅데이터 태그값을 Y로 전송
+                    winston.info('**************************** Data is transmitted , 건수 : '+ rslt.length + ' ************************************');
+                    tableInfo = {tableName: 'motie_ai_single_log', tableData: _.cloneDeep(rslt), bigData_tag: 'Y', bigData_cnt: rslt.length};
+                    makereq.highrankPush(tableInfo);
+                }
+                else if(rslt.length > 100){
                     winston.info('**************************** Data is transmitted , 건수 : '+ rslt.length + ' ************************************');
                     let motherTable = rslt.division(100);
 

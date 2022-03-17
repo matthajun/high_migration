@@ -17,19 +17,20 @@ const HighRank_log = require('./ai/HighRank_log');
 const HighRank_packet = require('./ai/HighRank_packet');
 const HighRank_op2 = require('./ai/HighRank_op2');
 
-const HighRank = require('./HighRank');
-
-const HighRank_Policy = require('./policy/HighRank_policy_update');
-const HighRank_communi = require('./policy/HighRank_communi_update');
-const HighRank_log_update = require('./policy/HighRank_log_update');
-const HighRank_asset = require('./policy/HighRank_asset_update');
-const HighRank_asset_ip = require('./policy/HighRank_asset_ip_update');
-
-const singleRule = require('./policy/HighRank_Rulesingle_update');
-const multiRule = require('./policy/HighRank_Rulemulti_update');
-const mapRule = require('./policy/HighRank_Rulemap_update');
-const fileTrans = require('./fileTrans');
-const H009Trans = require('./policy/H009_transport');
+// 21.11부로 사용하지 않는 기능
+// const HighRank = require('./HighRank');
+//
+// const HighRank_Policy = require('./policy/HighRank_policy_update');
+// const HighRank_communi = require('./policy/HighRank_communi_update');
+// const HighRank_log_update = require('./policy/HighRank_log_update');
+// const HighRank_asset = require('./policy/HighRank_asset_update');
+// const HighRank_asset_ip = require('./policy/HighRank_asset_ip_update');
+//
+// const singleRule = require('./policy/HighRank_Rulesingle_update');
+// const multiRule = require('./policy/HighRank_Rulemulti_update');
+// const mapRule = require('./policy/HighRank_Rulemap_update');
+// const fileTrans = require('./fileTrans');
+// const H009Trans = require('./policy/H009_transport');
 
 const api = require('./routes/api');
 

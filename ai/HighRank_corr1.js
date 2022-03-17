@@ -50,7 +50,7 @@ module.exports.searchAndtransm = async function() {
             let tableInfo = {};
             let rslt = await clickhouse.query(query).toPromise();
 
-            //부문전송 block(11.03)처리
+            //부문전송 ip 부분 block (11.03)
             for (r of rslt){
                 r.f_ip = ''; r.b_ip = '';
             }
@@ -58,7 +58,13 @@ module.exports.searchAndtransm = async function() {
             if (rslt instanceof Error) {
                 throw new Error(rslt);
             } else {
-                if(rslt.length > 100){
+                if(rslt.length > 10000){
+                    //부문으로 전송하려는 데이터가 10,000건 이상일 시 빅데이터 태그값을 Y로 전송
+                    winston.info('**************************** Data is transmitted , 건수 : '+ rslt.length + ' ************************************');
+                    tableInfo = {tableName: 'motie_ai_corr_result_v2', tableData: _.cloneDeep(rslt), bigData_tag: 'Y', bigData_cnt: rslt.length};
+                    makereq.highrankPush(tableInfo);
+                }
+                else if(rslt.length > 100){
                     winston.info('**************************** Data is transmitted , 건수 : '+ rslt.length + ' ************************************');
                     let motherTable = rslt.division(100);
 

@@ -8,11 +8,9 @@ module.exports.highrankPush = async function(value) {
     let confirmCode = confirmutils.makeConfirmCode(value.tableData);
     value.confirm_code = confirmCode;
 
-    let result = {};
-
     httpcall.Call('post', process.env.BUMUN_ADDRESS, value, async function (err, res) {
-        if(value.tableName.indexOf('ai_op') === -1) {
-            if(Array.isArray(value.tableData)) {
+        if(value.tableName.indexOf('ai_op') === -1) { //운영정보 데이터가 아닐 경우만 이력을 남김
+            if(Array.isArray(value.tableData)) { //테이블 데이터가 배열일 경우
                 for (tableData of value.tableData) {
                     let data = {
                         date_time: setTime.setDateTimeforHistory(),
@@ -22,7 +20,7 @@ module.exports.highrankPush = async function(value) {
                     await db['MOTIE_TRANSMISSION_HISTORY'].create(data);
                 }
             }
-            else {
+            else { //테이블 데이터가 단일일 경우
                 let data = {
                     date_time: setTime.setDateTimeforHistory(),
                     tableName: value.tableName,
