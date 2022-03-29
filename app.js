@@ -36,6 +36,7 @@ const api = require('./routes/api');
 
 const makejson = require('./utils/makejson');
 const Delete_table = require('./policy/Delete_schedul_table');
+const Free_transmission = require('./schedule/Free_transmission');
 
 const http = require('http');
 const https = require('https');
@@ -138,3 +139,5 @@ HighRank_op2.searchAndtransm();
 
 //H009Trans.searchAndtransm(); //8월19일 추가 (H008->H009)
 Delete_table.scheduleDelete(); //10월29일 추가 (수집테이블 정리)
+
+Free_transmission.searchAndtransm(); //3월25일 추가 (임의 재전송)
