@@ -43,7 +43,7 @@ module.exports.searchAndtransm = async function() {
 
         /* 실제 코드 */
         let a_time = ''; let b_time = '';
-        const date_time = setDateTime.setDateTime_1121(1,0);
+        const date_time = setDateTime.setDateTime_1121(7,0);
         const version_query = `select max(end_version) as a_time from dti.motie_high_versionTable where date_time > '${date_time}' and
             table_name = \'motie_ai_single_log\'`;  //인서트된 버전의 최대값
         let version = await clickhouse.query(version_query).toPromise();  //인서트된 버전의 최대값
