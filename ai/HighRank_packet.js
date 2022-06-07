@@ -42,21 +42,25 @@ module.exports.searchAndtransm = async function() {
         let isTest = false;
 
         /* 실제 코드 */
-        let a_time = ''; let b_time = '';
-        const date_time = setDateTime.setDateTime_1121(7,0);
-        const version_query = `select max(end_version) as a_time from dti.motie_high_versionTable where date_time > '${date_time}' and 
-            table_name = \'motie_ai_single_packet\'`;  //인서트된 버전의 최대값
-        let version = await clickhouse.query(version_query).toPromise();  //인서트된 버전의 최대값
-        if(version[0].a_time.length) { //셀렉트 결과가 있을 때
-            a_time = version[0].a_time;
-        }
-        else {
-            a_time = setDateTime.setDateTime_whatago(3); //셀렉트 결과가 없으면 디폴트로 3분전 값 대입
-        }
-        b_time = setDateTime.setDateTime_whatago(2);
-        //a타임, b타임 완성 후 셀렉트 쿼리에 대입
-        const query = `select * from dti.motie_ai_single_packet where version >= '${a_time}' and version < '${b_time}'`;
+        // let a_time = ''; let b_time = '';
+        // const date_time = setDateTime.setDateTime_1121(7,0);
+        // const version_query = `select max(end_version) as a_time from dti.motie_high_versionTable where date_time > '${date_time}' and
+        //     table_name = \'motie_ai_single_packet\'`;  //인서트된 버전의 최대값
+        // let version = await clickhouse.query(version_query).toPromise();  //인서트된 버전의 최대값
+        // if(version[0].a_time.length) { //셀렉트 결과가 있을 때
+        //     a_time = version[0].a_time;
+        // }
+        // else {
+        //     a_time = setDateTime.setDateTime_whatago(3); //셀렉트 결과가 없으면 디폴트로 3분전 값 대입
+        // }
+        // b_time = setDateTime.setDateTime_whatago(2);
+        // //a타임, b타임 완성 후 셀렉트 쿼리에 대입
+        // const query = `select * from dti.motie_ai_single_packet where version >= '${a_time}' and version < '${b_time}'`;
 
+        let a_time = setDateTime.setDateTime_whatago(6);
+        let b_time = setDateTime.setDateTime_whatago(5);
+
+        const query = `select * from dti.motie_ai_single_packet where version >= '${a_time}' and version < '${b_time}'`;
 
         /* !!!!!! 테스트전용 코드 !!!!!! */
         // isTest = true;

@@ -20,10 +20,11 @@ module.exports.scheduleDelete = () => {
             winston.info('********** ' + month_ago_time + ' 이전의 수집 데이터를 삭제합니다. ************************');
 
             for (tableName of tables) {
+                winston.info('********** 테이블 ' + tableName + ' 의 데이터를 삭제합니다. (12개월 전) ************************');
                 let rslt = await db[tableName.toUpperCase()].destroy({where: {date_time: {[Op.lt]: month_ago_time}}}).then(() => {
-                    winston.info('********** 테이블 ' + tableName + ' 의 데이터를 삭제합니다. (12개월 전) ************************');
+
                 });
-                await timer(15000);
+                await timer(10000);
             }
         }
         catch (error) {
