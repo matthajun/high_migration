@@ -24,6 +24,9 @@ module.exports.highrankPush = async function(value, num, version) {
         }
         else{ //부문위협 시스템으로의 전송이 성공했을 때
             if(res.body.result.res_cd === '00') {
+                // 빅데이터 응답에 로그남기기 22.07.11 추가
+                if(res.body.result.res_msg.indexOf('빅데이터') !== -1)
+                    winston.info("*************************** "+res.body.result.res_msg+" ***************");
 
                 // 1. 전송이력 남기기
                 // 운영정보 데이터가 아닐 경우만 이력을 남김 (수량이 너무 많음)
