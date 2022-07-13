@@ -46,7 +46,7 @@ app.set('port', process.env.PORT);
 //app.set('view engine', 'html');
 sequelize.sync({ force: false })
     .then(() => {
-        winston.info('success db connect (ver. 22 03 30) ');
+        winston.info('success db connect (ver. 22 07 14) ');
     })
     .catch((err) => {
         winston.error(err.stack);

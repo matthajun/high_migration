@@ -35,3 +35,8 @@ module.exports.setDateTime_1121_plus = function (day) {
     let a = moment().subtract(day, 'day');
     return a.format('YYYY-MM-DD HH:mm:ss');
 };
+
+module.exports.setDateTimeforHighHistory = function (month) {
+    let a = moment().subtract(month, 'month');
+    return a.format('YYYY-MM-DD HH:mm:ss');
+};

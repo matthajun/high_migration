@@ -37,6 +37,8 @@ Array.prototype.division = function (n) {
     return tmp;
 };
 
+const HistoryInsert = require('../service/HistoryInsert');
+
 module.exports.searchAndtransm = async function() {
     schedule.scheduleJob('50 * * * * *', async function() {
         let isTest = false;
@@ -117,6 +119,8 @@ module.exports.searchAndtransm = async function() {
                 else {
                     winston.info('**************************** 전송할 데이터가 없습니다. (결과 0건) ************************************');
                 }
+                //시간,테이블 별 전송 갯수 이력 추가 (22.07.13)
+                HistoryInsert.history_insert(rslt.length, 'motie_ai_single_packet')
             }
         } catch (error) {
             winston.error(error.stack);
